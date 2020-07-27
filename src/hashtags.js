@@ -2,11 +2,13 @@ const randomWordEng = require('random-words')
 const randomWordFr = require('random-word-fr')
 
 if (process.argv.length < 4) {
-  console.log('Help: node hashtags.js --suffix {suffix} --language {language} --random {number} {word1} {word2} ...')
+  console.log('Help: node hashtags.js --prefix {prefix} --suffix {suffix} --language {language} --random {number} {word1} {word2} ...')
   return
 }
 
 let suffix = ''
+
+let prefix = ''
 
 let language = 'fr'
 
@@ -14,7 +16,7 @@ let random = false
 
 const arguments = process.argv.splice(2)
 
-const words = []
+let words = []
 
 for (let i = 0; i < arguments.length; i++) {
   let arg = arguments[i]
@@ -30,6 +32,10 @@ for (let i = 0; i < arguments.length; i++) {
       break;
     case '--random':
       random = +arguments[i + 1]
+      i++
+      break;
+    case '--prefix':
+      prefix = arguments[i + 1]
       i++
       break;
     default:
@@ -49,4 +55,8 @@ if (random) {
   }
 }
 
-console.log(words.map(word => `#${word}${suffix}`).join(' '))
+if (prefix !== '') {
+  words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+}
+
+console.log(words.map(word => `#${prefix}${word}${suffix}`).join(' '))
